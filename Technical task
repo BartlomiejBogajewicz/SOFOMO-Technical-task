@@ -1,19 +1,19 @@
 WITH Result (dimension_1,dimension_2 ,measure_1,measure_2)
 AS(
-SELECT DISTINCT A.dimension_1
-			   ,MAP.correct_dimension_2 AS dimension_2 
-			   ,A.measure_1
-			   ,COALESCE(measure_2,0) AS measure_2
+SELECT DISTINCT     A.dimension_1
+		   ,MAP.correct_dimension_2 AS dimension_2 
+		   ,A.measure_1
+		   ,COALESCE(measure_2,0) AS measure_2
 		FROM A WITH (NOLOCK)
-		LEFT JOIN B ON A.dimension_1 = B.dimension_1
-		INNER JOIN MAP ON MAP.dimension_1 = A.dimension_1
+		LEFT JOIN B WITH (NOLOCK) ON A.dimension_1 = B.dimension_1
+		INNER JOIN MAP WITH (NOLOCK) ON MAP.dimension_1 = A.dimension_1
 		UNION
-		SELECT DISTINCT B.dimension_1
-			   ,MAP.correct_dimension_2 AS dimension_2 
-			   ,COALESCE(measure_1,0) AS measure_1
-			   ,B.measure_2
-		FROM B
-		LEFT JOIN A ON A.dimension_1 = B.dimension_1
-		INNER JOIN MAP ON MAP.dimension_1 = B.dimension_1 
+SELECT DISTINCT     B.dimension_1
+		   ,MAP.correct_dimension_2 AS dimension_2 
+		   ,COALESCE(measure_1,0) AS measure_1
+		   ,B.measure_2
+		FROM B WITH (NOLOCK)
+		LEFT JOIN A WITH (NOLOCK) ON A.dimension_1 = B.dimension_1
+		INNER JOIN MAP WITH (NOLOCK) ON MAP.dimension_1 = B.dimension_1 
 )
 SELECT * FROM Result 
